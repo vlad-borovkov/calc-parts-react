@@ -1,0 +1,14 @@
+.single-part {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid teal;
+}
+
+.single-part__item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid teal;
+    font-family: 'Inter';
+    font-size: 20px;
+}

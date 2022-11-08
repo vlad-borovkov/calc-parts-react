@@ -1,0 +1,15 @@
+.main-table {
+    width: 90vw;
+    border: 1px solid teal
+}
+
+.maintable__header {
+    display: flex;
+    border: 1px solid teal;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: Inter;
+    font-size: 30px;
+}
+
+.maintable__header-item {}
