@@ -85,7 +85,7 @@ export default function MainTable() {
         <button onClick={handleAddBodyPart}> Добавить деталь кузова</button>
       </div>
       <ul className='body-part'>
-        {bodyPartArr.map((item, index) => (
+        {bodyPartArr.map((item) => (
           <BodyPart
             key={item.id}
             bodyCard={item}

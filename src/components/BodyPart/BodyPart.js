@@ -14,20 +14,23 @@ export default function BodyPart(props) {
   const [partsArray, setPartArray] = React.useState([
     {
       id: Math.random(),
-      bodyPartName: 'Ручка',
-      bodyPartPrice: '1200',
-      bodyPartCount: '1',
-      bodyPartTotalPrice: '1200',
+      singlePartName: '',
+      singlePartPrice: '',
+      singlePartCount: 1,
+      singlePartTotalPrice: 0,
     },
   ]);
+  // состояние для рендеринга строки
+  const [onUpdateSinglePart, setOnUpdateSinglePart] = React.useState(false);
+  React.useEffect(() => {}, [onUpdateSinglePart]);
 
   const handleAddSinglePart = () => {
     const newSinglPart = {
       id: Math.random(),
-      bodyPartName: '',
-      bodyPartPrice: '',
-      bodyPartCount: '',
-      bodyPartTotalPrice: '',
+      singlePartName: '',
+      singlePartPrice: 0,
+      singlePartCount: 1,
+      singlePartTotalPrice: 0,
     };
 
     partsArray.push(newSinglPart);
@@ -37,6 +40,64 @@ export default function BodyPart(props) {
 
   const handleDeleteBodyPart = () => {
     onDeleteBodyPart(bodyCard);
+  };
+
+  const handleDeleteSinglePart = (singlePart) => {
+    console.log(singlePart);
+
+    // const numberItemForDelete = partsArray.indexOf(singlePart);
+
+    // partsArray.splice(numberItemForDelete, 1);
+
+    // setPartArray([...partsArray]);
+  };
+
+  const handleEditSinglePartName = (bodyCard, e) => {
+    // достаём искомую часть кузова и меняем текущее значение
+    const newSinglePartName = e.target.value;
+
+    partsArray.map((item) => {
+      if (item.id === bodyCard.id) {
+        item.singlePartName = newSinglePartName;
+      }
+    });
+  };
+
+  const handleEditSinglePartPrice = (bodyCard, e) => {
+    const newSinglePartPrice = e.target.value;
+
+    partsArray.map((item) => {
+      if (item.id === bodyCard.id) {
+        item.singlePartPrice = newSinglePartPrice;
+        item.singlePartTotalPrice = item.singlePartPrice * item.singlePartCount;
+      }
+    });
+    setOnUpdateSinglePart(!onUpdateSinglePart);
+  };
+
+  const handleEditSinglePartCount = (bodyCard, e) => {
+    const newSinglePartCount = e.target.value;
+
+    partsArray.map((item) => {
+      if (item.id === bodyCard.id) {
+        item.singlePartCount = newSinglePartCount;
+        item.singlePartTotalPrice = item.singlePartCount * item.singlePartPrice;
+      }
+    });
+
+    setOnUpdateSinglePart(!onUpdateSinglePart);
+  };
+
+  // слушаем изменения в сумме запчастей
+  const handleEditSinglePartAmmount = (bodyCard, e) => {
+    const newSinglePartAmmount = e.target.value;
+
+    partsArray.map((item) => {
+      if (item.id === bodyCard.id) {
+        item.singlePartAmmount = newSinglePartAmmount;
+        //console.log(item.singlePartAmmount);
+      }
+    });
   };
 
   return (
@@ -60,6 +121,7 @@ export default function BodyPart(props) {
           className='body-part__field-item'
           defaultValue={bodyCard.bodyPartPrice}
           onInput={(e) => onEditBodyPartPrice(bodyCard, e)}
+          min={'0'}
         />
         <input
           type='number'
@@ -86,7 +148,13 @@ export default function BodyPart(props) {
           <SinglePart
             key={item.id}
             partCard={item}
+            onUpdateSinglePart={onUpdateSinglePart}
+            onDeleteSinglePart={handleDeleteSinglePart}
             handleAddSinglePart={handleAddSinglePart}
+            onEditSinglePartName={handleEditSinglePartName}
+            onEditSinglePartPrice={handleEditSinglePartPrice}
+            onEditSinglePartCount={handleEditSinglePartCount}
+            onChangeSinglePartAmmount={handleEditSinglePartAmmount}
           />
         ))}
       </ul>
