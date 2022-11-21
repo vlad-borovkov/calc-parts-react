@@ -38,9 +38,14 @@
     background-color: antiquewhite;
 }
 
-.body-part__field-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    max-width: 16%;
+.body-part__name {}
+
+.body-part__price {}
+
+.body-part__price_off {
+    visibility: hidden;
 }
+
+.body-part__count {}
+
+.body-part__total-price {}

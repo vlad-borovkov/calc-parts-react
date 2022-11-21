@@ -4,10 +4,10 @@ export default function MainTable() {
   const [bodyPartArr, setBodyPartArr] = React.useState([
     {
       id: Math.random(),
-      bodyPartName: 'Дверь',
-      bodyPartPrice: '1200',
-      bodyPartCount: '1',
-      bodyPartTotalPrice: '1200',
+      bodyPartName: '',
+      bodyPartPrice: '',
+      bodyPartCount: 1,
+      bodyPartTotalPrice: 0,
     },
   ]);
 
@@ -16,8 +16,8 @@ export default function MainTable() {
       id: Math.random(),
       bodyPartName: '',
       bodyPartPrice: '',
-      bodyPartCount: '',
-      bodyPartTotalPrice: '',
+      bodyPartCount: 1,
+      bodyPartTotalPrice: 0,
     };
 
     bodyPartArr.push(newBodyPart);
@@ -25,9 +25,12 @@ export default function MainTable() {
     setBodyPartArr([...bodyPartArr]);
   };
 
+  // состояние для рендеринга части кузова
+  const [onUpdatуBodyPart, setOnUpdateBodyPart] = React.useState(false);
+  React.useEffect(() => {}, [onUpdatуBodyPart]);
+
   const handleDeleteBodyPart = (bodyCardItem) => {
     const numberItemForDelete = bodyPartArr.indexOf(bodyCardItem);
-    console.log(numberItemForDelete);
 
     bodyPartArr.splice(numberItemForDelete, 1);
 
@@ -52,28 +55,51 @@ export default function MainTable() {
     bodyPartArr.map((item) => {
       if (item.id === bodyCard.id) {
         item.bodyPartPrice = newBodyPartPrice;
+        item.bodyPartTotalPrice = item.bodyPartPrice * item.bodyPartCount;
       }
     });
+    setOnUpdateBodyPart(!onUpdatуBodyPart);
   };
 
-  const handleEditBodyPartCount = (bodyCard, e) => {
+  const handleEditBodyPartCount = (bodyCard, e, partsArrayLength) => {
     const newBodyPartCount = e.target.value;
+    console.log(newBodyPartCount, bodyCard, partsArrayLength);
 
     bodyPartArr.map((item) => {
-      if (item.id === bodyCard.id) {
+      if (item.id === bodyCard.id && partsArrayLength === 0) {
+        console.log('a');
         item.bodyPartCount = newBodyPartCount;
+        item.bodyPartTotalPrice = item.bodyPartPrice * item.bodyPartCount;
+      } else if (item.id === bodyCard.id && partsArrayLength >= 1) {
+        console.log('b');
+        // нужна сумма всех запчастей, а не тотал части кузова!
+        const newPrice = item.bodyPartCount * item.bodyPartTotalPrice;
+        item.bodyPartTotalPrice = newPrice;
       }
     });
+    setOnUpdateBodyPart(!onUpdatуBodyPart);
   };
 
-  const onChangeBodyPartAmmount = (bodyCard, e) => {
-    const newBodyPartTotalPrice = e.target.value;
+  // const onChangeBodyPartAmmount = (bodyCard, e) => {
+  //   const newBodyPartTotalPrice = e.target.value;
+
+  //   bodyPartArr.map((item) => {
+  //     if (item.id === bodyCard.id) {
+  //       item.bodyPartTotalPrice = newBodyPartTotalPrice;
+  //     }
+  //   });
+  // };
+
+  const setBodyPartTotalPrice = (bodyCardId, partTotalPrice) => {
+    //const newPrice = partTotalPrice;
+    //console.log(bodyCardId, partTotalPrice);
 
     bodyPartArr.map((item) => {
-      if (item.id === bodyCard.id) {
-        item.bodyPartTotalPrice = newBodyPartTotalPrice;
+      if (item.id === bodyCardId) {
+        item.bodyPartTotalPrice = partTotalPrice;
       }
     });
+    setOnUpdateBodyPart(!onUpdatуBodyPart);
   };
 
   return (
@@ -93,7 +119,7 @@ export default function MainTable() {
             onEditBodyPartName={handleEditBodyPartName}
             onEditBodyPartPrice={handleEditBodyPartPrice}
             onEditBodyPartCount={handleEditBodyPartCount}
-            onChangeBodyPartAmmount={onChangeBodyPartAmmount}
+            setBodyPartTotalPrice={setBodyPartTotalPrice}
           />
         ))}
       </ul>

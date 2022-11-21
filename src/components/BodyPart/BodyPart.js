@@ -9,17 +9,10 @@ export default function BodyPart(props) {
     onEditBodyPartCount,
     onDeleteBodyPart,
     onChangeBodyPartAmmount,
+    setBodyPartTotalPrice,
   } = props;
 
-  const [partsArray, setPartArray] = React.useState([
-    {
-      id: Math.random(),
-      singlePartName: '',
-      singlePartPrice: '',
-      singlePartCount: 1,
-      singlePartTotalPrice: 0,
-    },
-  ]);
+  const [partsArray, setPartArray] = React.useState([]);
   // состояние для рендеринга строки
   const [onUpdateSinglePart, setOnUpdateSinglePart] = React.useState(false);
   React.useEffect(() => {}, [onUpdateSinglePart]);
@@ -45,11 +38,11 @@ export default function BodyPart(props) {
   const handleDeleteSinglePart = (singlePart) => {
     console.log(singlePart);
 
-    // const numberItemForDelete = partsArray.indexOf(singlePart);
+    const numberItemForDelete = partsArray.indexOf(singlePart);
 
-    // partsArray.splice(numberItemForDelete, 1);
+    partsArray.splice(numberItemForDelete, 1);
 
-    // setPartArray([...partsArray]);
+    setPartArray([...partsArray]);
   };
 
   const handleEditSinglePartName = (bodyCard, e) => {
@@ -62,29 +55,43 @@ export default function BodyPart(props) {
       }
     });
   };
-
-  const handleEditSinglePartPrice = (bodyCard, e) => {
+  //пересчёт суммы при редактировании цены запчасти
+  const handleEditSinglePartPrice = (partCard, e) => {
     const newSinglePartPrice = e.target.value;
 
     partsArray.map((item) => {
-      if (item.id === bodyCard.id) {
+      if (item.id === partCard.id) {
         item.singlePartPrice = newSinglePartPrice;
         item.singlePartTotalPrice = item.singlePartPrice * item.singlePartCount;
       }
     });
+
+    //считаем сумму значений
+    const sumOfAllParts = partsArray.reduce(
+      (a, b) => a + b.singlePartTotalPrice,
+      0
+    );
+    // передаём сумму запчасти
+    setBodyPartTotalPrice(bodyCard.id, sumOfAllParts);
     setOnUpdateSinglePart(!onUpdateSinglePart);
   };
-
-  const handleEditSinglePartCount = (bodyCard, e) => {
+  //пересчёт суммы при редактировании количества запчасти
+  const handleEditSinglePartCount = (partCard, e) => {
     const newSinglePartCount = e.target.value;
 
     partsArray.map((item) => {
-      if (item.id === bodyCard.id) {
+      if (item.id === partCard.id) {
         item.singlePartCount = newSinglePartCount;
         item.singlePartTotalPrice = item.singlePartCount * item.singlePartPrice;
       }
     });
-
+    //считаем сумму значений
+    const sumOfAllParts = partsArray.reduce(
+      (a, b) => a + b.singlePartTotalPrice,
+      0
+    );
+    // передаём сумму запчасти и id bodyCard
+    setBodyPartTotalPrice(bodyCard.id, sumOfAllParts);
     setOnUpdateSinglePart(!onUpdateSinglePart);
   };
 
@@ -95,7 +102,6 @@ export default function BodyPart(props) {
     partsArray.map((item) => {
       if (item.id === bodyCard.id) {
         item.singlePartAmmount = newSinglePartAmmount;
-        //console.log(item.singlePartAmmount);
       }
     });
   };
@@ -112,28 +118,30 @@ export default function BodyPart(props) {
       <div className='body-part__field'>
         <input
           type='text'
-          className='body-part__field-item'
+          className='body-part__name'
           defaultValue={bodyCard.bodyPartName}
           onInput={(e) => onEditBodyPartName(bodyCard, e)}
         />
         <input
           type='number'
-          className='body-part__field-item'
+          className={
+            partsArray.length >= 1 ? `body-part__price_off` : `body-part__price`
+          }
           defaultValue={bodyCard.bodyPartPrice}
           onInput={(e) => onEditBodyPartPrice(bodyCard, e)}
           min={'0'}
         />
         <input
           type='number'
-          className='body-part__field-item'
+          className='body-part__count'
           defaultValue={bodyCard.bodyPartCount}
-          onInput={(e) => onEditBodyPartCount(bodyCard, e)}
+          onInput={(e) => onEditBodyPartCount(bodyCard, e, partsArray.length)}
         />
+
         <textarea
-          className='body-part__field-item'
+          className='body-part__total-price'
           type='text'
           defaultValue={bodyCard.bodyPartTotalPrice}
-          onChange={(e) => onChangeBodyPartAmmount(bodyCard, e)}
           disabled={true}
         />
 
