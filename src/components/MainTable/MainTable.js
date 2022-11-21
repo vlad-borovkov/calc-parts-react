@@ -7,8 +7,8 @@ export default function MainTable(props) {
       id: Math.random(),
       bodyPartName: '',
       bodyPartPrice: '',
-      bodyPartCount: 1,
-      bodyPartTotalPrice: 0,
+      bodyPartCount: '',
+      bodyPartTotalPrice: '',
     },
   ]);
 

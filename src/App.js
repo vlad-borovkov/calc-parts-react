@@ -4,13 +4,12 @@ import MainTable from './components/MainTable/MainTable';
 import AmmountPrice from './components/AmmountPrice/AmmountPrice';
 
 function App() {
-  const [AmmountBodyPrice, setAmmountBodyPrice] = React.useState(0);
+  const [ammountBodyPrice, setAmmountBodyPrice] = React.useState(0);
 
   return (
     <div className='page'>
-      {console.log(AmmountBodyPrice)}
       <MainTable setAmmountBodyPrice={setAmmountBodyPrice} />
-      <AmmountPrice />
+      <AmmountPrice ammountBodyPrice={ammountBodyPrice} />
     </div>
   );
 }

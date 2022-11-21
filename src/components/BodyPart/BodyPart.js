@@ -21,9 +21,9 @@ export default function BodyPart(props) {
     const newSinglPart = {
       id: Math.random(),
       singlePartName: '',
-      singlePartPrice: 0,
-      singlePartCount: 1,
-      singlePartTotalPrice: 0,
+      singlePartPrice: '',
+      singlePartCount: '',
+      singlePartTotalPrice: '',
     };
 
     partsArray.push(newSinglPart);
@@ -92,62 +92,81 @@ export default function BodyPart(props) {
 
   return (
     <li className='body-part__item'>
-      <div className='body-part__header'>
-        <div className='body-part__header-item'>Деталь кузова</div>
-        <div className='body-part__header-item'>Цена</div>
-        <div className='body-part__header-item'>Количество</div>
-        <div className='body-part__header-item'>Общая стоимость</div>
-        <div className='body-part__header-item'>Действия</div>
-      </div>
       <div className='body-part__field'>
-        <span>Деталь кузова</span>
-        <input
-          type='text'
-          className='body-part__name'
-          defaultValue={bodyCard.bodyPartName}
-          onInput={(e) => onEditBodyPartName(bodyCard, e)}
-        />
-        <input
-          type='number'
+        <div className='body-part__input-wrap'>
+          <label className='body-part__header-item'>Деталь кузова</label>
+          <input
+            type='text'
+            className='body-part__name'
+            defaultValue={bodyCard.bodyPartName}
+            onInput={(e) => onEditBodyPartName(bodyCard, e)}
+            placeholder='Введите название'
+          />
+        </div>
+        <div
           className={
-            partsArray.length >= 1 ? `body-part__price_off` : `body-part__price`
+            partsArray.length >= 1
+              ? `body-part__price_off`
+              : `body-part__input-wrap`
           }
-          defaultValue={bodyCard.bodyPartPrice}
-          onInput={(e) => onEditBodyPartPrice(bodyCard, e)}
-          min={'0'}
-        />
-        <input
-          type='number'
-          className='body-part__count'
-          defaultValue={bodyCard.bodyPartCount}
-          onInput={(e) => onEditBodyPartCount(bodyCard, e, partsArray.length)}
-        />
+        >
+          <label className='body-part__header-item'>Цена</label>
+          <input
+            type='number'
+            className='body-part__price'
+            defaultValue={bodyCard.bodyPartPrice}
+            onInput={(e) => onEditBodyPartPrice(bodyCard, e)}
+            min='0'
+            placeholder='Введите цену'
+          />
+        </div>
 
-        <textarea
-          className='body-part__total-price'
-          type='text'
-          defaultValue={bodyCard.bodyPartTotalPrice}
-          disabled={true}
-        />
+        <div className='body-part__input-wrap'>
+          <label className='body-part__header-item'>Количество</label>
+          <input
+            type='number'
+            className='body-part__count'
+            defaultValue={bodyCard.bodyPartCount}
+            onInput={(e) => onEditBodyPartCount(bodyCard, e, partsArray.length)}
+            min='0'
+          />
+        </div>
+        <div className='body-part__input-wrap'>
+          <label className='body-part__header-item'>Общая стоимость</label>
+          <textarea
+            className='body-part__total-price'
+            type='text'
+            defaultValue={bodyCard.bodyPartTotalPrice}
+            readOnly
+            cols={10}
+            rows={1}
+            placeholder='Итого'
+          />
+        </div>
 
         <div className='body-part__actions'>
-          <button onClick={handleDeleteBodyPart}>Удалить деталь кузова</button>
+          <p className='body-part__header-item'>Действия</p>
+          <button onClick={handleDeleteBodyPart}>Удалить деталь</button>
           <button onClick={handleAddSinglePart}> Добавить запчасть</button>
         </div>
       </div>
-
-      <ul className='single-part'>
-        {partsArray.map((item) => (
-          <SinglePart
-            key={item.id}
-            partCard={item}
-            onDeleteSinglePart={handleDeleteSinglePart}
-            onEditSinglePartName={handleEditSinglePartName}
-            onEditSinglePartPrice={handleEditSinglePartPrice}
-            onEditSinglePartCount={handleEditSinglePartCount}
-          />
-        ))}
-      </ul>
+      {partsArray.length >= 1 && (
+        <fieldset className='single-part__field'>
+          <legend> Запчасти: </legend>
+          <ul className='single-part'>
+            {partsArray.map((item) => (
+              <SinglePart
+                key={item.id}
+                partCard={item}
+                onDeleteSinglePart={handleDeleteSinglePart}
+                onEditSinglePartName={handleEditSinglePartName}
+                onEditSinglePartPrice={handleEditSinglePartPrice}
+                onEditSinglePartCount={handleEditSinglePartCount}
+              />
+            ))}
+          </ul>
+        </fieldset>
+      )}
     </li>
   );
 }

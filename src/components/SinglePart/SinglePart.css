@@ -1,24 +1,46 @@
 .single-part {
     display: flex;
     flex-direction: column;
-    border: 1px solid teal;
+    margin: 0;
+    padding: 0;
 }
 
 .single-part__item {
     display: flex;
-
+    font-size: 18px;
+    border: 1px solid teal;
+    margin: 6px;
+    flex-direction: row;
+    align-items: flex-end;
 }
 
-
+.single-part__input-wrap {
+    display: flex;
+    flex-direction: column;
+}
 
 .single-part__field {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     font-family: 'Inter';
     font-size: 20px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.single-part__name {
+    width: 90%;
+}
+
+.single-part__price {
+    width: 65%;
+}
+
+.single-part__count {
+    width: 24%;
 }
 
 .single-part__total-price {
+    width: 65%;
     resize: none;
 }
