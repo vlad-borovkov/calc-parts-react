@@ -1,6 +1,7 @@
 import React from 'react';
 import BodyPart from '../BodyPart/BodyPart';
-export default function MainTable() {
+export default function MainTable(props) {
+  const { setAmmountBodyPrice } = props;
   const [bodyPartArr, setBodyPartArr] = React.useState([
     {
       id: Math.random(),
@@ -21,20 +22,29 @@ export default function MainTable() {
     };
 
     bodyPartArr.push(newBodyPart);
-
     setBodyPartArr([...bodyPartArr]);
   };
 
   // состояние для рендеринга части кузова
   const [onUpdatуBodyPart, setOnUpdateBodyPart] = React.useState(false);
+  // рендерим компонент при обновлении информации
   React.useEffect(() => {}, [onUpdatуBodyPart]);
+
+  // функция просчёта суммы всех ЧАСТЕЙ КУЗОВА для прокидывания в стейт выше
+  const calcSumAllBodyPart = () => {
+    const sumOfAllBodyPart = bodyPartArr.reduce(
+      (a, b) => a + b.bodyPartTotalPrice,
+      0
+    );
+    // передаём просчитанную сумму всех ЧАСТЕЙ КУЗОВА
+    setAmmountBodyPrice(sumOfAllBodyPart);
+  };
 
   const handleDeleteBodyPart = (bodyCardItem) => {
     const numberItemForDelete = bodyPartArr.indexOf(bodyCardItem);
-
     bodyPartArr.splice(numberItemForDelete, 1);
-
     setBodyPartArr([...bodyPartArr]);
+    calcSumAllBodyPart();
   };
 
   const handleEditBodyPartName = (bodyCard, e) => {
@@ -48,6 +58,19 @@ export default function MainTable() {
     });
   };
 
+  // стейт актуального значения суммы запчастей
+  const [totalBodyPrice, setTotalBodyPrice] = React.useState(0);
+  const setBodyPartTotalPrice = (bodyCardId, partTotalPrice) => {
+    setTotalBodyPrice(partTotalPrice);
+    bodyPartArr.map((item) => {
+      if (item.id === bodyCardId) {
+        item.bodyPartTotalPrice = partTotalPrice;
+      }
+    });
+    calcSumAllBodyPart();
+    setOnUpdateBodyPart(!onUpdatуBodyPart);
+  };
+
   const handleEditBodyPartPrice = (bodyCard, e) => {
     // достаём искомую часть кузова и меняем текущее значение
     const newBodyPartPrice = e.target.value;
@@ -58,47 +81,23 @@ export default function MainTable() {
         item.bodyPartTotalPrice = item.bodyPartPrice * item.bodyPartCount;
       }
     });
+    calcSumAllBodyPart();
     setOnUpdateBodyPart(!onUpdatуBodyPart);
   };
 
   const handleEditBodyPartCount = (bodyCard, e, partsArrayLength) => {
     const newBodyPartCount = e.target.value;
-    console.log(newBodyPartCount, bodyCard, partsArrayLength);
-
     bodyPartArr.map((item) => {
       if (item.id === bodyCard.id && partsArrayLength === 0) {
-        console.log('a');
         item.bodyPartCount = newBodyPartCount;
         item.bodyPartTotalPrice = item.bodyPartPrice * item.bodyPartCount;
       } else if (item.id === bodyCard.id && partsArrayLength >= 1) {
-        console.log('b');
-        // нужна сумма всех запчастей, а не тотал части кузова!
-        const newPrice = item.bodyPartCount * item.bodyPartTotalPrice;
-        item.bodyPartTotalPrice = newPrice;
+        // нужна сумма всех запчастей в карточке, а не тотал части кузова!
+        item.bodyPartCount = newBodyPartCount;
+        item.bodyPartTotalPrice = totalBodyPrice * item.bodyPartCount;
       }
     });
-    setOnUpdateBodyPart(!onUpdatуBodyPart);
-  };
-
-  // const onChangeBodyPartAmmount = (bodyCard, e) => {
-  //   const newBodyPartTotalPrice = e.target.value;
-
-  //   bodyPartArr.map((item) => {
-  //     if (item.id === bodyCard.id) {
-  //       item.bodyPartTotalPrice = newBodyPartTotalPrice;
-  //     }
-  //   });
-  // };
-
-  const setBodyPartTotalPrice = (bodyCardId, partTotalPrice) => {
-    //const newPrice = partTotalPrice;
-    //console.log(bodyCardId, partTotalPrice);
-
-    bodyPartArr.map((item) => {
-      if (item.id === bodyCardId) {
-        item.bodyPartTotalPrice = partTotalPrice;
-      }
-    });
+    calcSumAllBodyPart();
     setOnUpdateBodyPart(!onUpdatуBodyPart);
   };
 

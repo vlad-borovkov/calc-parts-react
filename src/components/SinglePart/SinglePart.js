@@ -4,12 +4,10 @@ import inputMask from '../../utils/inputMask.js'; // доделать маску
 export default function SinglePart(props) {
   const {
     partCard,
-    onUpdateSinglePart,
     onDeleteSinglePart,
     onEditSinglePartName,
     onEditSinglePartPrice,
     onEditSinglePartCount,
-    onChangeSinglePartAmmount,
   } = props;
 
   const handleDeleteBodyPart = () => {

@@ -8,7 +8,6 @@ export default function BodyPart(props) {
     onEditBodyPartPrice,
     onEditBodyPartCount,
     onDeleteBodyPart,
-    onChangeBodyPartAmmount,
     setBodyPartTotalPrice,
   } = props;
 
@@ -17,6 +16,7 @@ export default function BodyPart(props) {
   const [onUpdateSinglePart, setOnUpdateSinglePart] = React.useState(false);
   React.useEffect(() => {}, [onUpdateSinglePart]);
 
+  // добавление новой запчасти
   const handleAddSinglePart = () => {
     const newSinglPart = {
       id: Math.random(),
@@ -27,7 +27,6 @@ export default function BodyPart(props) {
     };
 
     partsArray.push(newSinglPart);
-
     setPartArray([...partsArray]);
   };
 
@@ -35,14 +34,23 @@ export default function BodyPart(props) {
     onDeleteBodyPart(bodyCard);
   };
 
+  // функция суммы стоимости всех запчастей и передачи в стейт выше
+  const calcSumAllSingleParts = () => {
+    const sumOfAllParts = partsArray.reduce(
+      (a, b) => a + b.singlePartTotalPrice,
+      0
+    );
+    // передаём сумму всех ЗАПЧАСТЕЙ внутри ЧАСТИ кузова
+    setBodyPartTotalPrice(bodyCard.id, sumOfAllParts);
+  };
+
   const handleDeleteSinglePart = (singlePart) => {
     console.log(singlePart);
 
     const numberItemForDelete = partsArray.indexOf(singlePart);
-
     partsArray.splice(numberItemForDelete, 1);
-
     setPartArray([...partsArray]);
+    calcSumAllSingleParts();
   };
 
   const handleEditSinglePartName = (bodyCard, e) => {
@@ -65,14 +73,7 @@ export default function BodyPart(props) {
         item.singlePartTotalPrice = item.singlePartPrice * item.singlePartCount;
       }
     });
-
-    //считаем сумму значений
-    const sumOfAllParts = partsArray.reduce(
-      (a, b) => a + b.singlePartTotalPrice,
-      0
-    );
-    // передаём сумму запчасти
-    setBodyPartTotalPrice(bodyCard.id, sumOfAllParts);
+    calcSumAllSingleParts();
     setOnUpdateSinglePart(!onUpdateSinglePart);
   };
   //пересчёт суммы при редактировании количества запчасти
@@ -85,25 +86,8 @@ export default function BodyPart(props) {
         item.singlePartTotalPrice = item.singlePartCount * item.singlePartPrice;
       }
     });
-    //считаем сумму значений
-    const sumOfAllParts = partsArray.reduce(
-      (a, b) => a + b.singlePartTotalPrice,
-      0
-    );
-    // передаём сумму запчасти и id bodyCard
-    setBodyPartTotalPrice(bodyCard.id, sumOfAllParts);
+    calcSumAllSingleParts();
     setOnUpdateSinglePart(!onUpdateSinglePart);
-  };
-
-  // слушаем изменения в сумме запчастей
-  const handleEditSinglePartAmmount = (bodyCard, e) => {
-    const newSinglePartAmmount = e.target.value;
-
-    partsArray.map((item) => {
-      if (item.id === bodyCard.id) {
-        item.singlePartAmmount = newSinglePartAmmount;
-      }
-    });
   };
 
   return (
@@ -116,6 +100,7 @@ export default function BodyPart(props) {
         <div className='body-part__header-item'>Действия</div>
       </div>
       <div className='body-part__field'>
+        <span>Деталь кузова</span>
         <input
           type='text'
           className='body-part__name'
@@ -156,13 +141,10 @@ export default function BodyPart(props) {
           <SinglePart
             key={item.id}
             partCard={item}
-            onUpdateSinglePart={onUpdateSinglePart}
             onDeleteSinglePart={handleDeleteSinglePart}
-            handleAddSinglePart={handleAddSinglePart}
             onEditSinglePartName={handleEditSinglePartName}
             onEditSinglePartPrice={handleEditSinglePartPrice}
             onEditSinglePartCount={handleEditSinglePartCount}
-            onChangeSinglePartAmmount={handleEditSinglePartAmmount}
           />
         ))}
       </ul>

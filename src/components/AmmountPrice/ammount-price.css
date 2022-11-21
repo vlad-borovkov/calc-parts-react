@@ -1,0 +1,27 @@
+.ammount-price {
+    position: fixed;
+    bottom: 0%;
+    width: 100vw;
+    height: 100px;
+    background-color: aliceblue;
+
+}
+
+.ammount-price__title {
+    margin: 0;
+    font-family: 'Inter';
+    font-size: 30px;
+    position: absolute;
+    top: 0;
+    right: 100px;
+}
+
+.ammount-price__price {
+    margin: 0;
+    font-family: 'Inter';
+    font-size: 20px;
+    font-weight: 900;
+    position: absolute;
+    bottom: 15px;
+    right: 100px;
+}
